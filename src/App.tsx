@@ -1,12 +1,15 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
 
 import Home from './pages/Home/Home';
-import Search from './pages/Search/Search';
 
 import NavBar from './components/NavBar/NavBar';
 import Footer from './components/Footer/Footer';
 
 import './App.css';
+
+// Search 페이지를 동적으로 로드하여 Home 페이지 번들에서 분리
+const Search = lazy(() => import('./pages/Search/Search'));
 
 const App = () => {
   return (
@@ -14,7 +17,14 @@ const App = () => {
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/search" element={<Search />} />
+        <Route 
+          path="/search" 
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Search />
+            </Suspense>
+          } 
+        />
       </Routes>
       <Footer />
     </Router>
