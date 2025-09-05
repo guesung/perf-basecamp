@@ -12,7 +12,7 @@ const useMousePosition = () => {
     offsetY: 0
   });
 
-  const rafId = useRef<number>(null);
+  const rafId = useRef<number | null>(null);
 
   const updateMousePosition = useCallback((e: MouseEvent) => {
     if (rafId.current) {
@@ -21,7 +21,7 @@ const useMousePosition = () => {
 
     rafId.current = requestAnimationFrame(() => {
       const { clientX, clientY, pageX, pageY, offsetX, offsetY } = e;
-      
+
       setMousePosition({
         clientX,
         clientY,

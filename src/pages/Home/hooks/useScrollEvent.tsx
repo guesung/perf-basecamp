@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef } from 'react';
 type ScrollHandler = () => void;
 
 const useScrollEvent = (onScroll: ScrollHandler) => {
-  const rafId = useRef<number>(null);
+  const rafId = useRef<number | null>(null);
   const ticking = useRef(false);
 
   const handleScroll = useCallback(() => {
