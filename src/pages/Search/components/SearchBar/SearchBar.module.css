@@ -1,6 +1,7 @@
 .searchbarSection {
   padding-top: 5rem;
   padding-bottom: 2.5rem;
+  contain: layout style;
 }
 
 .searchbarContainer {
@@ -34,4 +35,7 @@
   width: 2.75rem;
   height: 2.75rem;
   background: var(--radial-gradient);
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
 }

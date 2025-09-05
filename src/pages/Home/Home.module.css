@@ -4,6 +4,7 @@
   width: 100%;
   height: 46.5rem;
   padding-top: 3.5rem;
+  contain: layout style;
 }
 
 .heroImage {
@@ -77,6 +78,7 @@
     rgba(232, 109, 198, 0.64248) 0.01%,
     #bd00ff 77.6%
   );
+  contain: layout style;
 }
 
 .featureSectionWrapper {
