@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -49,6 +50,25 @@ module.exports = {
     ]
   },
   optimization: {
-    minimize: true
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true, // console.log 제거
+            drop_debugger: true, // debugger 제거
+            pure_funcs: ['console.log', 'console.info', 'console.warn'] // console.log 제거
+          },
+          mangle: {
+            toplevel: true,
+            reserved: [] // 변수 이름 변경 방지
+          },
+          format: {
+            comments: false // 주석 제거
+          }
+        },
+        extractComments: false // 주석 제거
+      })
+    ]
   }
 };
