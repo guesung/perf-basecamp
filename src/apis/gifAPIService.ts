@@ -4,6 +4,7 @@ import { IGif } from '@giphy/js-types';
 import { GifImageModel } from '../models/image/gifImage';
 import { apiClient, ApiError } from '../utils/apiClient';
 import { apiCache } from '../utils/apiCache';
+import { IWebP } from '@giphy/js-types/dist/images';
 
 const API_KEY = process.env.GIPHY_API_KEY;
 if (!API_KEY) {
@@ -13,12 +14,20 @@ if (!API_KEY) {
 const BASE_URL = 'https://api.giphy.com/v1/gifs';
 const DEFAULT_FETCH_COUNT = 16;
 
+const getMinSizeWebpImageUrl = (widthFixed: IWebP, heightFixed: IWebP): string => {
+  const image = heightFixed.webp_size <= widthFixed.webp_size ? heightFixed : widthFixed;
+  return image.webp;
+};
+
 const convertResponseToModel = (gifList: IGif[]): GifImageModel[] => {
   return gifList.map(({ id, title, images }) => {
     return {
       id,
       title: title ?? '',
-      imageUrl: images.original.webp
+      imageUrl: getMinSizeWebpImageUrl(
+        images.fixed_width_downsampled,
+        images.fixed_height_downsampled
+      )
     };
   });
 };
@@ -46,7 +55,7 @@ export const gifAPIService = {
    */
   getTrending: async (): Promise<GifImageModel[]> => {
     const cacheKey = 'giphy:trending';
-    
+
     return apiCache.wrap(cacheKey, async () => {
       const url = apiClient.appendSearchParams(new URL(`${BASE_URL}/trending`), {
         api_key: API_KEY,
@@ -66,7 +75,7 @@ export const gifAPIService = {
    */
   searchByKeyword: async (keyword: string, page: number): Promise<GifImageModel[]> => {
     const cacheKey = `giphy:search:${keyword}:${page}`;
-    
+
     return apiCache.wrap(cacheKey, async () => {
       const url = apiClient.appendSearchParams(new URL(`${BASE_URL}/search`), {
         api_key: API_KEY,

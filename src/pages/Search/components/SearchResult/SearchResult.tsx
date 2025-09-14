@@ -7,6 +7,8 @@ import { SearchStatus, SEARCH_STATUS } from '../../hooks/useGifSearch';
 
 import styles from './SearchResult.module.css';
 import Skeleton from '../../../../components/Skeleton/Skeleton';
+import { IWebP } from '@giphy/js-types/dist/images';
+import { IGif } from '@giphy/js-types';
 
 type SearchResultProps = {
   status: SearchStatus;
@@ -15,7 +17,6 @@ type SearchResultProps = {
 };
 
 const SearchResult = ({ status, gifList, loadMore }: SearchResultProps) => {
-  console.log(gifList);
   const renderGifList = () => (
     <div className={styles.gifResultWrapper}>
       {gifList.length === 0 && new Array(16).fill(0).map((_, index) => <Skeleton key={index} />)}
