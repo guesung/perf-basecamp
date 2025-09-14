@@ -52,7 +52,7 @@ module.exports = {
     ]
   },
   optimization: {
-    minimize: true,
+    minimize: isProduction,
     minimizer: [
       ...(isProduction
         ? [
