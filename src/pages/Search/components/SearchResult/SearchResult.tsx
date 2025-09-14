@@ -6,6 +6,7 @@ import GifItem from '../GifItem/GifItem';
 import { SearchStatus, SEARCH_STATUS } from '../../hooks/useGifSearch';
 
 import styles from './SearchResult.module.css';
+import Skeleton from '../../../../components/Skeleton/Skeleton';
 
 type SearchResultProps = {
   status: SearchStatus;
@@ -14,11 +15,14 @@ type SearchResultProps = {
 };
 
 const SearchResult = ({ status, gifList, loadMore }: SearchResultProps) => {
+  console.log(gifList);
   const renderGifList = () => (
     <div className={styles.gifResultWrapper}>
-      {gifList.map((gif: GifImageModel) => (
-        <GifItem key={gif.id} imageUrl={gif.imageUrl} title={gif.title} />
-      ))}
+      {gifList.length === 0 && new Array(16).fill(0).map((_, index) => <Skeleton key={index} />)}
+      {gifList.length > 0 &&
+        gifList.map((gif: GifImageModel) => (
+          <GifItem key={gif.id} imageUrl={gif.imageUrl} title={gif.title} />
+        ))}
     </div>
   );
 
