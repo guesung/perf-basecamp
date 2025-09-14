@@ -4,6 +4,8 @@ const Dotenv = require('dotenv-webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
   entry: './src/index.tsx',
   resolve: { extensions: ['.ts', '.tsx', '.js', '.jsx'] },
@@ -52,23 +54,27 @@ module.exports = {
   optimization: {
     minimize: true,
     minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          compress: {
-            drop_console: true, // console.log 제거
-            drop_debugger: true, // debugger 제거
-            pure_funcs: ['console.log', 'console.info', 'console.warn'] // console.log 제거
-          },
-          mangle: {
-            toplevel: true,
-            reserved: [] // 변수 이름 변경 방지
-          },
-          format: {
-            comments: false // 주석 제거
-          }
-        },
-        extractComments: false // 주석 제거
-      })
+      ...(isProduction
+        ? [
+            new TerserPlugin({
+              terserOptions: {
+                compress: {
+                  drop_console: true, // console.log 제거
+                  drop_debugger: true, // debugger 제거
+                  pure_funcs: ['console.log', 'console.info', 'console.warn'] // console.log 제거
+                },
+                mangle: {
+                  toplevel: true,
+                  reserved: [] // 변수 이름 변경 방지
+                },
+                format: {
+                  comments: false // 주석 제거
+                }
+              },
+              extractComments: false // 주석 제거
+            })
+          ]
+        : [])
     ]
   }
 };
