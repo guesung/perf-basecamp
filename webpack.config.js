@@ -10,7 +10,8 @@ module.exports = {
   entry: './src/index.tsx',
   resolve: { extensions: ['.ts', '.tsx', '.js', '.jsx'] },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].js',
     path: path.join(__dirname, '/dist'),
     clean: true
   },
@@ -54,27 +55,50 @@ module.exports = {
   optimization: {
     minimize: isProduction,
     minimizer: [
-      ...(isProduction
-        ? [
-            new TerserPlugin({
-              terserOptions: {
-                compress: {
-                  drop_console: true, // console.log 제거
-                  drop_debugger: true, // debugger 제거
-                  pure_funcs: ['console.log', 'console.info', 'console.warn'] // console.log 제거
-                },
-                mangle: {
-                  toplevel: true,
-                  reserved: [] // 변수 이름 변경 방지
-                },
-                format: {
-                  comments: false // 주석 제거
-                }
-              },
-              extractComments: false // 주석 제거
-            })
-          ]
-        : [])
-    ]
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: true, // console.log 제거
+            drop_debugger: true, // debugger 제거
+            pure_funcs: ['console.log', 'console.info', 'console.warn'] // console.log 제거
+          },
+          mangle: {
+            toplevel: true,
+            reserved: [] // 변수 이름 변경 방지
+          },
+          format: {
+            comments: false // 주석 제거
+          }
+        },
+        extractComments: false // 주석 제거
+      })
+    ],
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        // vendor 라이브러리들을 별도 번들로 분리
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        },
+        // react 라이브러리들을 별도 번들로 분리
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+          priority: 10,
+          enforce: true
+        },
+        // CSS 파일을 별도로 분리
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true,
+          priority: 20
+        }
+      }
+    }
   }
 };
