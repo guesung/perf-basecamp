@@ -13,12 +13,24 @@ const App = () => {
   return (
     <Router>
       <NavBar />
-      <Suspense fallback={<div>로딩 중</div>}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<Search />} />
-        </Routes>
-      </Suspense>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<div>로딩 중</div>}>
+              <Home />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <Suspense fallback={<div>로딩 중</div>}>
+              <Search />
+            </Suspense>
+          }
+        />
+      </Routes>
       <Footer />
     </Router>
   );
